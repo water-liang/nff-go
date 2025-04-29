@@ -13,6 +13,15 @@ export RTE_TARGET=x86_64-native-linuxapp-gcc
 DPDK_INSTALL_DIR=$(RTE_TARGET)-install
 export RTE_SDK=$(PROJECT_ROOT)/dpdk/$(DPDK_DIR)/$(DPDK_INSTALL_DIR)/usr/local/share/dpdk
 
+# 关闭mlx 驱动和bpf支持
+# 这两个选项在docker中运行时会导致问题
+# 关闭mlx 驱动是因为在docker中没有mlx驱动
+# 关闭bpf支持是因为在docker中没有bpf支持
+# 关闭这两个选项可以在docker中运行nff-go
+# 关闭这两个选项后，nff-go的性能会下降
+NFF_GO_NO_MLX_DRIVERS=yes
+NFF_GO_NO_BPF_SUPPORT=yes
+
 # Configure flags for native code. Disable FSGSBASE and F16C to run in
 # VMs and Docker containers.
 CFLAGS = -I$(RTE_SDK)/$(RTE_TARGET)/include	\
